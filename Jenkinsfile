@@ -1,4 +1,4 @@
-@Library('GitLibrary@master') _
+/*@Library('GitLibrary@master') _
 
 node {
    maven {
@@ -8,4 +8,36 @@ node {
       POM_FILE         = "pom.xml"
       MVN_GOALS        = "mvn clean install -Dmaven.test.skip=true"
    }
+}*/
+pipeline {
+    agent any
+
+    stages {
+        stage ('Compile Stage') {
+
+            steps {
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn clean compile'
+                }
+            }
+        }
+
+        stage ('Testing Stage') {
+
+            steps {
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn test'
+                }
+            }
+        }
+
+
+        stage ('Deployment Stage') {
+            steps {
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn deploy'
+                }
+            }
+        }
+    }
 }
